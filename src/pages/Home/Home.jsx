@@ -7,7 +7,6 @@ import {
   selectStatus,
 } from "../../redux/slice/postSlice";
 import CardItem from "../../components/CartItem";
-
 export default function Home() {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -16,9 +15,8 @@ export default function Home() {
   const posts = useSelector(selectAllPosts);
   const status = useSelector(selectStatus);
   if (status === "error") {
-    return <h2>Error</h2>;
+    return <h2>Đã có lỗi xảy ra. Vui lòng thử lại sau</h2>;
   }
-
   return (
     <>
       <h1>Blog</h1>
@@ -26,19 +24,17 @@ export default function Home() {
         {status === "pending" ? (
           <h2>Loading...</h2>
         ) : (
-          posts.map(({ id, title }) => {
-            return (
-              <Grid item xs={4} key={id}>
-                <CardItem
-                  image={
-                    "http://fastly.picsum.photos/id/1/5000/3333.jpg?hmac=Asv2DU3rA_5D1xSe22xZK47WEAN0wjWeFOhzd13ujW4"
-                  }
-                  id={id}
-                  title={title}
-                />
-              </Grid>
-            );
-          })
+          posts.map(({ id, title }) => (
+            <Grid item xs={4} key={id}>
+              <CardItem
+                image={
+                  "https://fastly.picsum.photos/id/1/367/267.jpg?hmac=jZdc5TviQPVhxLyvyU8siO-I5FMVXVZpBhsBYKbBJpM"
+                }
+                title={title}
+                id={id}
+              />
+            </Grid>
+          ))
         )}
       </Grid>
     </>
