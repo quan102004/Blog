@@ -29,11 +29,11 @@ export default function Post() {
           <Box sx={{ paddingBlock: 1, display: "flex" }} gap={1}>
             <span>
               Posted by:{" "}
-              <Link color="inherit" href={`/authors/${post.userId}`}>
+              <Link color="inherit" href={`/author/${post.userId}`}>
                 {post?.user?.username}
               </Link>
             </span>
-            <span>View: {post.views}</span>
+            <span>Views: {post.views}</span>
           </Box>
           <Box>
             <p>{post.body}</p>
