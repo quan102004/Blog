@@ -1,20 +1,44 @@
 import { FormControl, InputAdornment, TextField } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from "@mui/icons-material/Clear";
-import { useState } from "react";
+import { createStyles, makeStyles } from "@mui/styles";
+import { useCallback, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { getPosts } from "../redux/slice/postSlice";
+import { debounce } from "../utils/debounce";
+
+const useStyles = makeStyles(() => {
+  return createStyles({
+    search: {
+      margin: "0",
+    },
+  });
+});
 
 export default function SearchForm() {
+  const { search } = useStyles();
   const [showClearIcon, setShowClearIcon] = useState("none");
   const [keyword, setKeyword] = useState("");
+  const dispatch = useDispatch();
   const handleChange = (event) => {
-    setShowClearIcon(event.target.value === "" ? "none" : "flex");
-    setKeyword(event.target.value);
+    const value = event.target.value;
+    setShowClearIcon(value === "" ? "none" : "flex");
+    setKeyword(value);
+    requestSearch(value);
   };
-  const handleClick = () => {
+  const handleClearInput = () => {
     setKeyword("");
+    requestSearch("");
+    setShowClearIcon("none");
   };
+  const requestSearch = useCallback(
+    debounce((keyword) => {
+      dispatch(getPosts(keyword));
+    }),
+    [],
+  );
   return (
-    <FormControl sx={{ margin: 0, paddingBottom: 2 }} fullWidth={true}>
+    <FormControl className={search} sx={{ paddingBottom: 2 }} fullWidth={true}>
       <TextField
         size="small"
         variant="outlined"
@@ -32,7 +56,7 @@ export default function SearchForm() {
             <InputAdornment
               position="end"
               style={{ display: showClearIcon }}
-              onClick={handleClick}
+              onClick={handleClearInput}
             >
               <ClearIcon style={{ cursor: "pointer" }} />
             </InputAdornment>
