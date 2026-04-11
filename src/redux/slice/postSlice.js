@@ -40,28 +40,34 @@ export const postSlice = createSlice({
 
 export const getPosts = createAsyncThunk(
   "posts/getPosts",
-  async (_, { rejectWithValue }) => {
-    const response = await axios.get(`${getEnv("VITE_SERVER_API")}/posts`);
+  async (query = "", { rejectWithValue }) => {
+    let queryString = "";
+    if (query) {
+      queryString = `/search?q=${query}`;
+    }
+    const response = await axios.get(
+      `${getEnv("VITE_SERVER_API")}/posts${queryString}`,
+    );
     if (response.status !== 200) {
       return rejectWithValue("Fetching data error");
     }
     const data = await response.data.posts;
     return data;
-  }
+  },
 );
 
 export const getPost = createAsyncThunk(
   "posts/getPost",
   async (id, { rejectWithValue }) => {
     const response = await axios.get(
-      `${getEnv("VITE_SERVER_API")}/posts/${id}`
+      `${getEnv("VITE_SERVER_API")}/posts/${id}`,
     );
     if (response.status !== 200) {
       return rejectWithValue("Fetching data error");
     }
     const post = await response.data;
     const responseUser = await axios.get(
-      `${getEnv("VITE_SERVER_API")}/users/${post.userId}`
+      `${getEnv("VITE_SERVER_API")}/users/${post.userId}`,
     );
     if (responseUser.status === 200) {
       const user = await responseUser.data;
@@ -69,7 +75,7 @@ export const getPost = createAsyncThunk(
     }
 
     return post;
-  }
+  },
 );
 
 export const selectAllPosts = (state) => state.posts.postList;
