@@ -32,6 +32,7 @@ export default function SearchForm() {
 
     const handleClearInput = () => {
         setKeyword("");
+        setSearchParams({ keyword: "" });
     };
 
     const requestSearch = useCallback(
