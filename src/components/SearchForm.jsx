@@ -21,27 +21,23 @@ export default function SearchForm() {
     const [showClearIcon, setShowClearIcon] = useState("none");
     const [keyword, setKeyword] = useState("");
     const dispatch = useDispatch();
-    const [searchParams, setSearchParams] = useSearchParams("");
+    const [searchParams, setSearchParams] = useSearchParams();
     const firstRequestRef = useRef(true);
-
     const handleChange = (event) => {
         const value = event.target.value;
         setKeyword(value);
         setSearchParams({ keyword: value });
     };
-
     const handleClearInput = () => {
         setKeyword("");
         setSearchParams({ keyword: "" });
     };
-
     const requestSearch = useCallback(
         debounce((keyword) => {
             dispatch(getPosts({ query: keyword }));
         }),
         [],
     );
-
     useEffect(() => {
         if (!firstRequestRef.current) {
             requestSearch(keyword);
@@ -56,8 +52,7 @@ export default function SearchForm() {
                 firstRequestRef.current = false;
             }
         };
-    }, [keyword]);
-
+    }, [keyword, requestSearch, searchParams]);
     return (
         <FormControl
             className={search}
